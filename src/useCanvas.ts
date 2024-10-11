@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react'
 import type { box } from './types.d.ts'
-import { INITIAL_BOX, INITIAL_X_SPEED, MODE } from './constants.ts'
+import { BACKGROUD_COLOR, CANVAS_HEIGHT, GAMEOVER_COLOR, INITIAL_BOX, INITIAL_X_SPEED, MODE, WIN_COLOR } from './constants.ts'
 import { addBox, manageDirection } from './gameLogic.ts'
+import { drawBackground } from './canvasDraw.ts'
 
-function useCanvas (draw: ({ context, boxes, mode }: { context: CanvasRenderingContext2D, boxes: box[], mode: MODE }) => void) {
+function useCanvas (draw: ({ context, boxes, mode, color }: { context: CanvasRenderingContext2D, boxes: box[], mode: MODE, color: string }) => void) {
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const frameIdRef = useRef(0)
@@ -20,24 +21,42 @@ function useCanvas (draw: ({ context, boxes, mode }: { context: CanvasRenderingC
     function gameloop () {
       if (!context) return
 
-      //Start Gameloop
       if (modeRef.current === MODE.BOUNCE) {
         speedRef.current = manageDirection(speedRef.current, boxesRef.current, currentRef.current)
         boxesRef.current[currentRef.current].x += speedRef.current
       } else if (modeRef.current === MODE.STOP) {
         const newBox = addBox(boxesRef.current, currentRef.current)
-        boxesRef.current = [...boxesRef.current, newBox]
-        modeRef.current = MODE.BOUNCE
-        currentRef.current++
-        speedRef.current += speedRef.current > 0 ? 1 : -1
+        if (newBox.width === 0) {
+          modeRef.current = MODE.GAMEOVER
+        } else {
+          boxesRef.current = [...boxesRef.current, newBox]
+          if (boxesRef.current[currentRef.current].y === CANVAS_HEIGHT) {
+            modeRef.current = MODE.WIN
+          } else {
+            modeRef.current = MODE.BOUNCE
+            currentRef.current++
+            speedRef.current += speedRef.current > 0 ? 1 : -1
+          }
+        }
+      } else if (modeRef.current === MODE.GAMEOVER) {
+        drawBackground({ context, color: GAMEOVER_COLOR })
+      } else if (modeRef.current === MODE.WIN) {
+        drawBackground({ context, color: WIN_COLOR })
       }
-      draw({ context, boxes: boxesRef.current, mode: modeRef.current })
+
+      draw({ context, boxes: boxesRef.current, mode: modeRef.current, color: BACKGROUD_COLOR })
       frameIdRef.current = window.requestAnimationFrame(gameloop)
     }
     gameloop()
     
     function handleInput () {
       if (modeRef.current === MODE.BOUNCE) modeRef.current = MODE.STOP
+      else if (modeRef.current === MODE.GAMEOVER || MODE.WIN) {
+        speedRef.current = INITIAL_X_SPEED
+        boxesRef.current = [INITIAL_BOX]
+        modeRef.current = MODE.BOUNCE
+        currentRef.current = 0
+      }
     }
 
     canvas.addEventListener('pointerdown', handleInput)

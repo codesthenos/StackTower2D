@@ -1,8 +1,8 @@
 import { CANVAS_WIDTH, CANVAS_HEIGHT, BOX_HEIGHT, MODE } from './constants.ts'
 import type { box } from './types.d.ts'
 
-function drawBackground ({ context }: { context: CanvasRenderingContext2D }) {
-  context.fillStyle = "#e3bb56"
+export function drawBackground ({ context, color }: { context: CanvasRenderingContext2D, color: string }) {
+  context.fillStyle = color
   context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
 }
 
@@ -16,10 +16,10 @@ function drawBoxes ({ context, boxes }: { context: CanvasRenderingContext2D, box
   })
 }
 
-function draw ({ context, boxes, mode }: { context: CanvasRenderingContext2D, boxes: box[], mode: MODE }) {
+function draw ({ context, boxes, mode, color }: { context: CanvasRenderingContext2D, boxes: box[], mode: MODE, color: string }) {
   if (mode === MODE.GAMEOVER) return
 
-  drawBackground({ context })
+  drawBackground({ context, color })
   drawBoxes({ context, boxes })
 }
 
