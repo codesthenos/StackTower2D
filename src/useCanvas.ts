@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import type { box } from './types.d.ts'
 import { BACKGROUD_COLOR, GAMEOVER_COLOR, WIN_COLOR, INITIAL_BOX, INITIAL_X_SPEED, MODE } from './constants.ts'
-import { addBox, chooseMode, manageDirection } from './gameLogic.ts'
+import { addBox, chooseMode, chunkAndReplaceBox, manageDirection } from './gameLogic.ts'
 import { drawBackground } from './canvasDraw.ts'
 
 function useCanvas (draw: ({ context, boxes, mode, color }: { context: CanvasRenderingContext2D, boxes: box[], mode: MODE, color: string }) => void) {
@@ -28,6 +28,7 @@ function useCanvas (draw: ({ context, boxes, mode, color }: { context: CanvasRen
       } else if (modeRef.current === MODE.STOP) {
         const newBox = addBox(boxesRef.current, currentRef.current)
         modeRef.current = chooseMode(newBox, boxesRef.current, currentRef.current)
+        boxesRef.current[currentRef.current] = chunkAndReplaceBox(boxesRef.current, currentRef.current, newBox)
         boxesRef.current = [...boxesRef.current, newBox]
         currentRef.current++
         speedRef.current += speedRef.current > 0 ? 1 : -1

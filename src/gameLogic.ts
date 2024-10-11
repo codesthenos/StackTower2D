@@ -9,7 +9,7 @@ function getColor () {
   return `rgb(${red}, ${green}, ${blue})`
 }
 
-function getWidth (boxesRef: box[], currentRef: number) {
+export function getWidth (boxesRef: box[], currentRef: number) {
   const currentBox = boxesRef[currentRef]
 
   if (currentRef === 0) return currentBox.width
@@ -33,7 +33,7 @@ export function addBox (boxesRef: box[], currentRef: number) {
 }
 
 export function manageDirection (speedRef: number, boxesRef: box[], currentRef: number) {
-  if ((speedRef > 0 && boxesRef[currentRef].x > CANVAS_WIDTH - 50) || (speedRef < 0 && boxesRef[currentRef].x < -50) ) {
+  if ((speedRef > 0 && boxesRef[currentRef].x > CANVAS_WIDTH - boxesRef[currentRef].width / 2) || (speedRef < 0 && boxesRef[currentRef].x < - boxesRef[currentRef].width / 2) ) {
     return -speedRef
   } else {
     return speedRef
@@ -46,4 +46,15 @@ export function chooseMode (newBox: box, boxesRef: box[], currentRef: number) {
     if (boxesRef[currentRef].y === CANVAS_HEIGHT) return MODE.WIN
   }
   return MODE.BOUNCE
+}
+
+export function chunkAndReplaceBox (boxesRef: box[], currentRef: number, newBox: box) {
+  if (boxesRef.length > 1) {
+    if (boxesRef[currentRef].x < boxesRef[currentRef - 1].x) {
+      return { ...boxesRef[currentRef], x: boxesRef[currentRef - 1].x,  width: newBox.width }
+    } else {
+      return { ...boxesRef[currentRef],  width: newBox.width }
+    }
+  }
+  return boxesRef[currentRef]
 }
