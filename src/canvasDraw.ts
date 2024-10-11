@@ -9,7 +9,7 @@ export function drawBackground ({ context, color }: { context: CanvasRenderingCo
 function drawBoxes ({ context, boxes }: { context: CanvasRenderingContext2D, boxes: box[] }) {
   boxes.forEach((box) => {
     const { x, y, width, color } = box
-    const newY = CANVAS_HEIGHT - y //+ cameraY
+    const newY = CANVAS_HEIGHT - y
       
     context.fillStyle = color
     context.fillRect(x, newY, width, BOX_HEIGHT)
