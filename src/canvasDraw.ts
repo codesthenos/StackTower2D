@@ -24,24 +24,3 @@ function draw ({ context, boxes, mode }: { context: CanvasRenderingContext2D, bo
 }
 
 export default draw
-
-export function getColor () {
-  const red = Math.floor(Math.random() * 255)
-  const green = Math.floor(Math.random() * 255)
-  const blue = Math.floor(Math.random() * 255)
-
-  return `rgb(${red}, ${green}, ${blue})`
-}
-
-export function getWidth (boxesRef: box[], currentRef: number) {
-  const currentBox = boxesRef[currentRef]
-
-  if (currentRef === 0) return currentBox.width
-
-  const previousBox = boxesRef[currentRef - 1]
-
-  const overlapStart = Math.max(previousBox.x, currentBox.x)
-  const overlapEnd = Math.min(previousBox.x + previousBox.width, currentBox.x + currentBox.width)
-  
-  return overlapEnd > overlapStart ? overlapEnd - overlapStart : 0
-}

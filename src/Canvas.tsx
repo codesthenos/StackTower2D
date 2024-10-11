@@ -1,14 +1,16 @@
-import type { MODE } from './constants.ts'
-import type { box } from './types.d.ts'
+//Constants
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from './constants.ts'
+//Draw Function
+import draw from './canvasDraw.ts'
+//Custom hook
 import useCanvas from './useCanvas.ts'
 
-function Canvas (props: { draw: ({ context, boxes, mode }: { context: CanvasRenderingContext2D, boxes: box[], mode: MODE }) => void, width: number, height: number }) {
-  const { draw, ...rest } = props
+function Canvas () {
   const { canvasRef } = useCanvas(draw)
   
   return (
     <>
-      <canvas ref={canvasRef} { ...rest } ></canvas>
+      <canvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} ></canvas>
     </>
   )
 }

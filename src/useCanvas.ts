@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import type { box } from './types.d.ts'
-import { BOX_HEIGHT, CANVAS_WIDTH, INITIAL_BOX, INITIAL_BOX_X, INITIAL_X_SPEED, MODE } from './constants.ts'
-import { getColor, getWidth } from './canvasDraw.ts'
+import { INITIAL_BOX, INITIAL_X_SPEED, MODE } from './constants.ts'
+import { addBox, manageDirection } from './gameLogic.ts'
 
 function useCanvas (draw: ({ context, boxes, mode }: { context: CanvasRenderingContext2D, boxes: box[], mode: MODE }) => void) {
 
@@ -16,41 +16,25 @@ function useCanvas (draw: ({ context, boxes, mode }: { context: CanvasRenderingC
     const canvas = canvasRef.current
     if (!canvas) return
     const context = canvas.getContext('2d')
-    
-    function moveBox () {
-      if ((speedRef.current > 0 && boxesRef.current[currentRef.current].x > CANVAS_WIDTH - 50) || (speedRef.current < 0 && boxesRef.current[currentRef.current].x < -50) ) {
-        speedRef.current = -speedRef.current
-      }
-      
-      boxesRef.current[currentRef.current].x += speedRef.current
-    }
 
-    function addBox () {
-      const newBox = {
-        x: INITIAL_BOX_X,
-        y: boxesRef.current[currentRef.current].y + BOX_HEIGHT,
-        width: getWidth(boxesRef.current, currentRef.current),
-        color: getColor()
-      }
-      boxesRef.current = [...boxesRef.current, newBox]
-    }
-
-    function render () {
+    function gameloop () {
       if (!context) return
 
       //Start Gameloop
       if (modeRef.current === MODE.BOUNCE) {
-        moveBox()
+        speedRef.current = manageDirection(speedRef.current, boxesRef.current, currentRef.current)
+        boxesRef.current[currentRef.current].x += speedRef.current
       } else if (modeRef.current === MODE.STOP) {
-        addBox()
+        const newBox = addBox(boxesRef.current, currentRef.current)
+        boxesRef.current = [...boxesRef.current, newBox]
         modeRef.current = MODE.BOUNCE
         currentRef.current++
         speedRef.current += speedRef.current > 0 ? 1 : -1
       }
       draw({ context, boxes: boxesRef.current, mode: modeRef.current })
-      frameIdRef.current = window.requestAnimationFrame(render)
+      frameIdRef.current = window.requestAnimationFrame(gameloop)
     }
-    render()
+    gameloop()
     
     function handleInput () {
       if (modeRef.current === MODE.BOUNCE) modeRef.current = MODE.STOP
