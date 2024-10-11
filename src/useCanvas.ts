@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import type { box } from './types.d.ts'
-import { BACKGROUD_COLOR, CANVAS_HEIGHT, GAMEOVER_COLOR, INITIAL_BOX, INITIAL_X_SPEED, MODE, WIN_COLOR } from './constants.ts'
-import { addBox, manageDirection } from './gameLogic.ts'
+import { BACKGROUD_COLOR, GAMEOVER_COLOR, WIN_COLOR, INITIAL_BOX, INITIAL_X_SPEED, MODE } from './constants.ts'
+import { addBox, chooseMode, manageDirection } from './gameLogic.ts'
 import { drawBackground } from './canvasDraw.ts'
 
 function useCanvas (draw: ({ context, boxes, mode, color }: { context: CanvasRenderingContext2D, boxes: box[], mode: MODE, color: string }) => void) {
@@ -21,21 +21,13 @@ function useCanvas (draw: ({ context, boxes, mode, color }: { context: CanvasRen
     function gameloop () {
       if (!context) return
 
-      function chooseMode (newBox: box) {
-        if (newBox.width === 0) return MODE.GAMEOVER
-        else {
-          if (boxesRef.current[currentRef.current].y === CANVAS_HEIGHT) return MODE.WIN
-        }
-        return MODE.BOUNCE
-      }
-
       if (modeRef.current === MODE.BOUNCE) {
         speedRef.current = manageDirection(speedRef.current, boxesRef.current, currentRef.current)
         boxesRef.current[currentRef.current].x += speedRef.current
 
       } else if (modeRef.current === MODE.STOP) {
         const newBox = addBox(boxesRef.current, currentRef.current)
-        modeRef.current = chooseMode(newBox)
+        modeRef.current = chooseMode(newBox, boxesRef.current, currentRef.current)
         boxesRef.current = [...boxesRef.current, newBox]
         currentRef.current++
         speedRef.current += speedRef.current > 0 ? 1 : -1

@@ -1,4 +1,4 @@
-import { BOX_HEIGHT, CANVAS_WIDTH, INITIAL_BOX_X } from './constants'
+import { BOX_HEIGHT, CANVAS_HEIGHT, CANVAS_WIDTH, INITIAL_BOX_X, MODE } from './constants'
 import type { box } from './types'
 
 function getColor () {
@@ -38,4 +38,12 @@ export function manageDirection (speedRef: number, boxesRef: box[], currentRef: 
   } else {
     return speedRef
   }
+}
+
+export function chooseMode (newBox: box, boxesRef: box[], currentRef: number) {
+  if (newBox.width === 0) return MODE.GAMEOVER
+  else {
+    if (boxesRef[currentRef].y === CANVAS_HEIGHT) return MODE.WIN
+  }
+  return MODE.BOUNCE
 }
