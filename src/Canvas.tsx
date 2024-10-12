@@ -6,11 +6,12 @@ import draw from './canvasDraw.ts'
 import useCanvas from './useCanvas.ts'
 
 function Canvas () {
-  const { canvasRef } = useCanvas(draw)
+  const { canvasRef, spanRef, score } = useCanvas(draw)
   
   return (
     <>
-      <canvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} ></canvas>
+      <span ref={spanRef}>Score: {score}</span>
+      <canvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT}></canvas>
     </>
   )
 }

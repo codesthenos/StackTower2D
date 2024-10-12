@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { box } from './types.d.ts'
 import { BACKGROUD_COLOR, GAMEOVER_COLOR, WIN_COLOR, INITIAL_BOX, INITIAL_X_SPEED, MODE } from './constants.ts'
 import { addBox, chooseMode, chunkAndReplaceBox, manageDirection } from './gameLogic.ts'
@@ -7,6 +7,9 @@ import { drawBackground } from './canvasDraw.ts'
 function useCanvas (draw: ({ context, boxes, mode, color }: { context: CanvasRenderingContext2D, boxes: box[], mode: MODE, color: string }) => void) {
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const spanRef = useRef<HTMLSpanElement | null>(null)
+  const [score, setScore] = useState(0)
+
   const frameIdRef = useRef(0)
   const speedRef = useRef(INITIAL_X_SPEED)
   const boxesRef = useRef<box[]>([INITIAL_BOX])
@@ -32,18 +35,22 @@ function useCanvas (draw: ({ context, boxes, mode, color }: { context: CanvasRen
         boxesRef.current = [...boxesRef.current, newBox]
         currentRef.current++
         speedRef.current += speedRef.current > 0 ? 1 : -1
+        if (modeRef.current === MODE.BOUNCE) setScore(prev => prev + currentRef.current * 10)
 
       } else if (modeRef.current === MODE.GAMEOVER) {
         drawBackground({ context, color: GAMEOVER_COLOR })
         return
 
       } else if (modeRef.current === MODE.WIN) {
+        setScore(9999)
         drawBackground({ context, color: WIN_COLOR })
         return
       }
 
       draw({ context, boxes: boxesRef.current, mode: modeRef.current, color: BACKGROUD_COLOR })
+      /*With this we can see when the gameloop stops rerenders
       console.log(frameIdRef)
+      */
       frameIdRef.current = window.requestAnimationFrame(gameloop)
     }
     gameloop()
@@ -55,6 +62,7 @@ function useCanvas (draw: ({ context, boxes, mode, color }: { context: CanvasRen
         boxesRef.current = [INITIAL_BOX]
         modeRef.current = MODE.BOUNCE
         currentRef.current = 0
+        setScore(0)
         gameloop()
       }
     }
@@ -73,6 +81,6 @@ function useCanvas (draw: ({ context, boxes, mode, color }: { context: CanvasRen
     }
   }, [draw])
 
-  return { canvasRef }
+  return { canvasRef, spanRef, score }
 }
 export default useCanvas
