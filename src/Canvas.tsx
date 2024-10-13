@@ -23,7 +23,7 @@ function Canvas () {
     <>
       {showConfetti && <Confetti />}
       {score > 0 && <span>Score: {score}</span>}
-      {textEndGame && <span>{textEndGame}</span>}
+      {textEndGame && <span className='endText'>{textEndGame}</span>}
       <canvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT}></canvas>
     </>
   )

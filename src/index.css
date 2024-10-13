@@ -25,11 +25,18 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: .5rem;
   justify-content: center;
   align-items: center;
   span {
     user-select: none;
+    font-weight: 600;
+    font-size: 1.5rem;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .endText {
+    position: absolute;
+    font-size: 3rem;
   }
   canvas {
     height: 75vh;
