@@ -7,8 +7,8 @@ import { drawBackground } from './canvasDraw.ts'
 function useCanvas (draw: ({ context, boxes, mode, color }: { context: CanvasRenderingContext2D, boxes: box[], mode: MODE, color: string }) => void) {
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
-  const spanRef = useRef<HTMLSpanElement | null>(null)
   const [score, setScore] = useState(0)
+  const [textEndGame, settextEndGame] = useState<'YOU WIN' | 'GAME OVER' | null>(null)
 
   const frameIdRef = useRef(0)
   const speedRef = useRef(INITIAL_X_SPEED)
@@ -39,11 +39,13 @@ function useCanvas (draw: ({ context, boxes, mode, color }: { context: CanvasRen
 
       } else if (modeRef.current === MODE.GAMEOVER) {
         drawBackground({ context, color: GAMEOVER_COLOR })
+        settextEndGame('GAME OVER')
         return
 
       } else if (modeRef.current === MODE.WIN) {
-        setScore(9999)
         drawBackground({ context, color: WIN_COLOR })
+        setScore(9999)
+        settextEndGame('YOU WIN')
         return
       }
 
@@ -63,6 +65,7 @@ function useCanvas (draw: ({ context, boxes, mode, color }: { context: CanvasRen
         modeRef.current = MODE.BOUNCE
         currentRef.current = 0
         setScore(0)
+        settextEndGame(null)
         gameloop()
       }
     }
@@ -81,6 +84,6 @@ function useCanvas (draw: ({ context, boxes, mode, color }: { context: CanvasRen
     }
   }, [draw])
 
-  return { canvasRef, spanRef, score }
+  return { canvasRef, score, textEndGame }
 }
 export default useCanvas

@@ -6,13 +6,12 @@ import draw from './canvasDraw.ts'
 import useCanvas from './useCanvas.ts'
 
 function Canvas () {
-  const { canvasRef, spanRef, score } = useCanvas(draw)
-  const text = score < 1201 ? '' : 'YOU WIN'
+  const { canvasRef, score, textEndGame } = useCanvas(draw)
   
   return (
     <>
-      <span ref={spanRef}>Score: {score}</span>
-      {text && <span>{text}</span>}
+      {score > 0 && <span>Score: {score}</span>}
+      {textEndGame && <span>{textEndGame}</span>}
       <canvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT}></canvas>
     </>
   )
