@@ -1,5 +1,5 @@
-import { CANVAS_WIDTH, CANVAS_HEIGHT, BOX_HEIGHT, MODE } from './constants.ts'
-import type { box } from './types.d.ts'
+import { CANVAS_WIDTH, CANVAS_HEIGHT, BOX_HEIGHT, MODE } from '../constants.ts'
+import type { box } from '../types.d.ts'
 
 export function drawBackground ({ context, color }: { context: CanvasRenderingContext2D, color: string }) {
   context.fillStyle = color

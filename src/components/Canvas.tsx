@@ -1,4 +1,4 @@
-import { CANVAS_HEIGHT, CANVAS_WIDTH } from './constants'
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from '../constants'
 
 function Canvas ({ canvasRef }: { canvasRef: React.MutableRefObject<HTMLCanvasElement | null> }) {
   return (

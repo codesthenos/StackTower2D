@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import type { box } from './types.d.ts'
-import { BACKGROUD_COLOR, GAMEOVER_COLOR, WIN_COLOR, INITIAL_BOX, INITIAL_X_SPEED, MODE } from './constants.ts'
-import { addBox, chooseMode, chunkAndReplaceBox, manageDirection } from './gameLogic.ts'
-import { drawBackground } from './canvasDraw.ts'
+import type { box } from '../types'
+import { BACKGROUD_COLOR, GAMEOVER_COLOR, WIN_COLOR, INITIAL_BOX, INITIAL_X_SPEED, MODE } from '../constants.ts'
+import { addBox, chooseMode, chunkAndReplaceBox, manageDirection } from '../utilities/gameLogic.ts'
+import { drawBackground } from '../utilities/canvasDraw.ts'
 
 function useCanvas (draw: ({ context, boxes, mode, color }: { context: CanvasRenderingContext2D, boxes: box[], mode: MODE, color: string }) => void) {
 

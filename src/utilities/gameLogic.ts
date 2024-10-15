@@ -1,5 +1,5 @@
-import { BOX_HEIGHT, CANVAS_HEIGHT, CANVAS_WIDTH, INITIAL_BOX_X, MODE } from './constants'
-import type { box } from './types'
+import { BOX_HEIGHT, CANVAS_HEIGHT, CANVAS_WIDTH, INITIAL_BOX_X, MODE } from '../constants'
+import type { box } from '../types'
 
 function getColor () {
   const red = Math.floor(Math.random() * 255)
